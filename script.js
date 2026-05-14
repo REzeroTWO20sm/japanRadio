@@ -21,10 +21,11 @@ views_counter.id = "views_counter";
 views_counter.textContent = 0;
 elementsList.push(views_counter);
 
-var audio = new Audio("https://boxradio-edge-00.streamafrica.net/jpopchill");
+var audio = new Audio();
+audio.preload = "none";
 audio.volume = 0;
 
-const socket = new WebSocket('ws://localhost:8000/ws');
+const socket = new WebSocket(`wss://${window.location.host}/japan-radio/ws`);
 
 var views = 0;
 
@@ -40,10 +41,14 @@ if (socket.readyState === WebSocket.OPEN) {
 
 socket.onmessage = (event) => {
   views = event.data;
-  views_counter.textContent = views;
+  views_counter.textContent = views + "👁️";
 };
 
 play_button.addEventListener("click", () => {
+  if (!audio.src){
+    audio.src = "https://boxradio-edge-00.streamafrica.net/jpopchill";
+    audio.load();
+  }
   audio.play();
 });
 
@@ -58,4 +63,10 @@ volume_slider.addEventListener("input", (event) => {
 
 for (let i = 0; i < elementsList.length; i++) {
   document.querySelector("#background").append(elementsList[i]);
+}
+
+const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+if (isMobile){
+  volume_slider.style.display = "none";
 }

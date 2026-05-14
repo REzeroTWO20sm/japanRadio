@@ -8,6 +8,7 @@ body{
   height: 100vh;
   background-image: url(./stars.jpg);
   background-size: contain;
+  background-color: black;
 }
 
 #background{
@@ -21,13 +22,19 @@ body{
 #play_button{
   position: absolute;
   left: 23%;
-  top: 77.5%;
+  top: 76.5%;
+  width: 15px;
+  height: 9px;
+  background-color: rgb(0, 0, 255, 0.5);
 }
 
 #stop_button{
-  position: absolute;
   left: 33%;
-  top: 77.5%;
+  position: absolute;
+  top: 76.5%;
+  width: 15px;
+  height: 9px;
+  background-color: rgb(0, 0, 255, 0.5);
 }
 
 #volume_slider{
@@ -35,6 +42,13 @@ body{
   left: 19%;
   top: 52%;
   width: 218px;
+}
+
+#views_counter{
+  text-align: center;
+  color: white;
+  background-color: rgb(0, 0, 0, 0.3);
+  opacity: 57%;
 }
 
 @media (min-width: 651px){
