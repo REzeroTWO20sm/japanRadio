@@ -25,19 +25,18 @@ var audio = new Audio();
 audio.preload = "none";
 audio.volume = 0;
 
-const socket = new WebSocket(`wss://${window.location.host}/japan-radio/ws`);
+const wsUrl = 'wss://' + window.location.host + '/japan-radio/ws';
+const socket = new WebSocket(wsUrl);
 
 var views = 0;
 
 function ping() {
-  socket.send("increment");
   socket.send("ping");
 }
 
-if (socket.readyState === WebSocket.OPEN) {
-  console.log("hello");
-  ping()
-}
+socket.addEventListener('open', function(){
+  ping();
+});
 
 socket.onmessage = (event) => {
   views = event.data;
