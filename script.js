@@ -26,22 +26,55 @@ audio.preload = "none";
 audio.volume = 0;
 
 const wsUrl = 'wss://' + window.location.host + '/japan-radio/ws';
-const socket = new WebSocket(wsUrl);
-
-var views = 0;
+let socket;
+let pingInterval;
 
 function ping() {
   socket.send("ping");
 }
 
-socket.addEventListener('open', function(){
-  ping();
+function connect(){
+  socket = new WebSocket(wsUrl);
+  socket.addEventListener('open', function(){
+      pingInterval = setInterval(() => {
+        if (socket.readyState === WebSocket.OPEN){
+          ping();
+        }
+    }, 25000);
+  });
+
+  socket.onmessage = (event) => {
+    views = event.data;
+    views_counter.textContent = views + "👁️";
+  };
+
+  socket.onclose = () => {
+    clearInterval(pingInterval)
+    setTimeout(connect, 3000);
+  };
+
+  socket.onerror = () => {
+    socket.close();
+  };
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden){
+    if (!socket || socket.readyState !== WebSocket.OPEN){
+      connect();
+    }
+  }
 });
 
-socket.onmessage = (event) => {
-  views = event.data;
-  views_counter.textContent = views + "👁️";
-};
+document.addEventListener('touchstart', () => {
+  if (!socket || socket.readyState !== WebSocket.OPEN){
+    connect();
+  } 
+});
+
+connect();
+
+var views = 0;
 
 play_button.addEventListener("click", () => {
   if (!audio.src){
@@ -53,6 +86,7 @@ play_button.addEventListener("click", () => {
 
 stop_button.addEventListener("click", () => {
   audio.pause();
+  audio.removeAttribute('src');
 });
 
 volume_slider.addEventListener("input", (event) => {

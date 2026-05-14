@@ -29,11 +29,14 @@ async def take_ping_give_views(websocket: WebSocket):
     await websocket.send_text(f"{views}")
 
     async def send_updates():
+        last_views = views
         while True:
-            await asyncio.sleep(1)
+            await asyncio.sleep(5)
             try:
                 current_views = get_views()
-                await websocket.send_text(f"{current_views}")
+                if current_views != last_views:
+                    last_views = current_views
+                    await websocket.send_text(f"{current_views}")
             except:
                 break
 
