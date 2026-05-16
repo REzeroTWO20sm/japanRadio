@@ -103,3 +103,9 @@ const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 if (isMobile){
   volume_slider.style.display = "none";
 }
+
+if (/android/i.test(navigator.userAgent)){
+  volume_slider.style.display = "block";
+}
+
+console.log("hi, hacker");
